@@ -27,7 +27,7 @@ all: $(JARNAME) $(JNILIBNAME)
 $(JARNAME): src/org/zeromq/*.java
 	@echo 'Building JZMQ Jarfile'
 	javac src/org/zeromq/*.java
-	jar cf $(JARNAME) src/org/zeromq/*.class src/org/zeromq/*.java
+	cd src && jar cf ../$(JARNAME) org/zeromq/*.class org/zeromq/*.java
 	@echo ' '
 
 builds/jnih/%.h: $(JAVA_SRCS) $(JARNAME)
