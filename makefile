@@ -43,17 +43,20 @@ builds/obj/%.o: src/%.cpp builds/jnih/%.h
 	@echo 'Invoking: GCC C++ Compiler'
 	@mkdir -p builds/obj
 ifeq ($(PLATFORM),Darwin)
-	$(CCACHE) g++ -fmessage-length=0 -O3 -arch x86_64 \
+	$(CCACHE) g++ \
+	-fmessage-length=0 -O3 -arch x86_64 \
 	-isysroot /Developer/SDKs/MacOSX10.6.sdk \
 	-mmacosx-version-min=10.6 \
-	-Ibuilds/jnih \
-	-Isrc/third_party -I/usr/local/include \
+	-Ibuilds/jnih -Isrc/third_party -I/usr/local/include \
 	-DMACOSX \
 	-c -o $@ $<
-	@echo "Foo"
 endif
 ifeq ($(PLATFORM),Linux)
-	@echo 'No support for building $< on Linux yet'
+	$(CCACHE) g++ \
+	-g3 -O3 -mmmx -msse -msse2 -msse3 -fPIC \
+	-Ibuilds/jnih -Isrc/third_party \
+	-DLINUX \
+	-c -o $@ $<
 endif
 	@echo 'Finished building: $<'
 	@echo ' '
@@ -67,10 +70,20 @@ ifeq ($(PLATFORM),Darwin)
 	$(USER_OBJS) $(OBJS) -lpthread \
 	-mmacosx-version-min=10.6 -single_module \
 	-compatibility_version 1 -current_version 1 \
-	-o $(JNILIBNAME)
+	-o $@
 endif
 ifeq ($(PLATFORM),Linux)
-	@echo 'No support for building $@ on Linux yet'
+	g++ -g3 -rdynamic -ldl -shared \
+	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64/server \
+	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64 \
+	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/../lib/amd64 \
+	-L/opt/jdk1.6.0_18/jre/lib/amd64/server \
+	-L/opt/jdk1.6.0_18/jre/lib/amd64 \
+	-L/opt/jdk1.6.0_18/jre/../lib/amd64 \
+	-L/usr/java/packages/lib/amd64 \
+	-L/usr/lib64 -L/lib64 -L/lib -ljava -ljvm -lverify -lpthread \
+	$(USER_OBJS) $^ \
+	-o $@
 endif
 	@echo 'Finished building target: $@'
 	@echo ' '
