@@ -1,10 +1,10 @@
 *.jar
 *.class
 *.o
-*.jnilib
+libjzmq.*
 src/config.hpp
-builds/*/jnih/org_zeromq_*.h
-builds/*/org
+builds/jnih
+builds/obj
 .classpath
 .project
 .settings/

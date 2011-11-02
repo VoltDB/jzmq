@@ -33,6 +33,7 @@ $(JARNAME): src/org/zeromq/*.java
 builds/jnih/%.h: $(JAVA_SRCS) $(JARNAME)
 ifneq ($(shell test -e $@ && echo exists),"exists")
 	@echo 'Building jni header files'
+	@mkdir -p builds/jnih
 	javah -d builds/jnih -classpath src org.zeromq.ZMQ
 	@echo ' '
 endif
@@ -40,7 +41,7 @@ endif
 builds/obj/%.o: src/%.cpp builds/jnih/%.h
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	mkdir -p builds/obj
+	@mkdir -p builds/obj
 ifeq ($(PLATFORM),Darwin)
 	$(CCACHE) g++ -fmessage-length=0 -O3 -arch x86_64 \
 	-isysroot /Developer/SDKs/MacOSX10.6.sdk \
