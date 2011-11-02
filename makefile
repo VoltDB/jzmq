@@ -77,6 +77,9 @@ ifeq ($(PLATFORM),Linux)
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64/server \
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64 \
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/../lib/amd64 \
+	-L/usr/lib/jvm/java-6-openjdk/jre/lib/amd64/server \
+	-L/usr/lib/jvm/java-6-openjdk/jre/lib/amd64 \
+	-L/usr/lib/jvm/java-6-openjdk/jre/../lib/amd64 \
 	-L/opt/jdk1.6.0_18/jre/lib/amd64/server \
 	-L/opt/jdk1.6.0_18/jre/lib/amd64 \
 	-L/opt/jdk1.6.0_18/jre/../lib/amd64 \
