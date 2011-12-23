@@ -1,5 +1,5 @@
 PLATFORM = $(shell uname)
-JARNAME = zmq-2.1.10.jar
+JARNAME = zmq-2.1.11.jar
 JNIBASENAME = libjzmq
 ifeq ($(PLATFORM),Darwin)
 	JNILIBNAME = $(JNIBASENAME).jnilib
