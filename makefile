@@ -52,8 +52,7 @@ ifeq ($(PLATFORM),Darwin)
 	-c -o $@ $<
 endif
 ifeq ($(PLATFORM),Linux)
-	$(CCACHE) g++ \
-	-g3 -O3 -mmmx -msse -msse2 -msse3 -fPIC \
+	g++ -fPIC \
 	-Ibuilds/jnih -Isrc/third_party \
 	-DLINUX \
 	-c -o $@ $<
@@ -67,13 +66,13 @@ $(JNILIBNAME): $(OBJS)
 ifeq ($(PLATFORM),Darwin)
 	MACOSX_DEPLOYMENT_TARGET="10.6" \
 	g++ -arch x86_64 -dynamiclib -isysroot /Developer/SDKs/MacOSX10.6.sdk \
-	$(USER_OBJS) $(OBJS) -lpthread \
+	$(USER_OBJS) $(OBJS) -pthread \
 	-mmacosx-version-min=10.6 -single_module \
 	-compatibility_version 1 -current_version 1 \
 	-o $@
 endif
 ifeq ($(PLATFORM),Linux)
-	g++ -g3 -rdynamic -ldl -shared \
+	g++ -shared -fPIC \
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64/server \
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/amd64 \
 	-L/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/../lib/amd64 \
@@ -84,8 +83,8 @@ ifeq ($(PLATFORM),Linux)
 	-L/opt/jdk1.6.0_18/jre/lib/amd64 \
 	-L/opt/jdk1.6.0_18/jre/../lib/amd64 \
 	-L/usr/java/packages/lib/amd64 \
-	-L/usr/lib64 -L/lib64 -L/lib -ljava -ljvm -lverify -lpthread \
-	$(USER_OBJS) $^ \
+	-L/usr/lib64 -L/lib64 -L/lib -ljava -ljvm -luuid -pthread \
+	$^ $(USER_OBJS) \
 	-o $@
 endif
 	@echo 'Finished building target: $@'
