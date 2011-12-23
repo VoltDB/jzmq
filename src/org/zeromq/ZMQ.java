@@ -67,13 +67,35 @@ public class ZMQ {
      */
     public static final int REP = 4;
     /**
-     * Flag to specify a XREQ socket, receiving side must be a XREP.
+     * Flag to specify a DEALER socket (aka XREQ). 
+     * DEALER is really a combined ventilator / sink 
+     * that does load-balancing on output and fair-queuing on input 
+     * with no other semantics. It is the only socket type that lets 
+     * you shuffle messages out to N nodes and shuffle the replies 
+     * back, in a raw bidirectional asynch pattern.
      */
-    public static final int XREQ = 5;
+    public static final int DEALER = 5;
     /**
-     * Flag to specify the receiving part of a XREQ socket.
+     * Old alias for DEALER flag.
+     * Flag to specify a XREQ socket, receiving side must be a XREP.
+     *
+     * @deprecated  As of release 3.0 of zeromq, replaced by {@link #DEALER}
      */
-    public static final int XREP = 6;
+    public static final int XREQ = DEALER;
+    /**
+     * Flag to specify ROUTER socket (aka XREP).
+     * ROUTER is the socket that creates and consumes request-reply 
+     * routing envelopes. It is the only socket type that lets you route 
+     * messages to specific connections if you know their identities.
+     */
+    public static final int ROUTER = 6;
+    /**
+     * Old alias for ROUTER flag.
+     * Flag to specify the receiving part of a XREQ socket.
+     *
+     * @deprecated  As of release 3.0 of zeromq, replaced by {@link #ROUTER}
+     */
+    public static final int XREP = ROUTER;
     /**
      * Flag to specify the receiving part of a PUSH socket.
      */
@@ -1235,13 +1257,19 @@ public class ZMQ {
 
         /**
          * Issue a poll call, using the specified timeout value.
+         * <p>
+         * Since ZeroMQ 3.0, the timeout parameter is in <i>milliseconds<i>,
+         * but prior to this the unit was <i>microseconds</i>.
          * 
          * @param tout
-         *            the timeout in milliseconds, as per zmq_poll ();
+         *            the timeout, as per zmq_poll ();
          *            if -1, it will block indefinitely until an event
          *            happens; if 0, it will return immediately;
          *            otherwise, it will wait for at most that many
-         *            milliseconds.
+         *            milliseconds/microseconds (see above).
+         *            
+         * @see http://api.zeromq.org/2-1:zmq-poll
+         * @see http://api.zeromq.org/3-0:zmq-poll
          *
          * @return how many objects where signalled by poll ()
          */
@@ -1325,6 +1353,9 @@ public class ZMQ {
 
         /**
          * Issue a poll call on the specified 0MQ sockets.
+         * <p>
+         * Since ZeroMQ 3.0, the timeout parameter is in <i>milliseconds<i>,
+         * but prior to this the unit was <i>microseconds</i>.
          * 
          * @param sockets
          *            an array of 0MQ Socket objects to poll.
@@ -1333,8 +1364,10 @@ public class ZMQ {
          * @param revents
          *            an array of short values with the results.
          * @param timeout
-         *            the maximum timeout in milliseconds.
+         *            the maximum timeout in milliseconds/microseconds (see above).
          * @return how many objects where signalled by poll ().
+         * @see http://api.zeromq.org/2-1:zmq-poll
+         * @see http://api.zeromq.org/3-0:zmq-poll
          */
         private native long run_poll (int count, Socket [] sockets, short [] events, short [] revents, long timeout);
 

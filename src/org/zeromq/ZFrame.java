@@ -3,6 +3,8 @@ package org.zeromq;
 
 import org.zeromq.ZMQ.Socket;
 
+import java.util.Arrays;
+
 /**
  * ZFrame
  * 
@@ -39,7 +41,7 @@ public class ZFrame {
 	 * @param data
 	 * 			Data to copy into ZFrame object
 	 */
-	protected ZFrame(byte[] data)
+	public ZFrame(byte[] data)
 	{
 		if (data != null) {
 			this.data = (byte[]) data.clone();
@@ -51,7 +53,7 @@ public class ZFrame {
 	 * Copies String into frame data
 	 * @param data
 	 */
-	protected ZFrame(String data) {
+	public ZFrame(String data) {
 		if (data != null) {
 			this.data = data.getBytes();
 		}
@@ -216,10 +218,10 @@ public class ZFrame {
 		
 		StringBuffer b = new StringBuffer();
 		for (int nbr = 0;nbr<data.length;nbr++) {
-			byte b1 = (byte) (data[nbr] >> 4);
-			byte b2 = (byte) (data[nbr] & 15);
-			b.append(hexChar.charAt((int)b1 & 0xff));
-			b.append(hexChar.charAt((int)b2 & 0xff));
+			int b1 = data[nbr] >>> 4 & 0xf;
+			int b2 = data[nbr] & 0xf;
+			b.append(hexChar.charAt(b1));
+			b.append(hexChar.charAt(b2));
 		}
 		return b.toString();
 	}
@@ -236,7 +238,24 @@ public class ZFrame {
 		if (!hasData()) return false;
 		return new String(this.data).compareTo(str) == 0;
 	}
-	
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ZFrame zFrame = (ZFrame) o;
+
+        if (!Arrays.equals(data, zFrame.data)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return data != null ? Arrays.hashCode(data) : 0;
+    }
+
 	/**
 	 * Returns a human - readable representation of frame's data
 	 * @return
