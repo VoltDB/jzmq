@@ -83,7 +83,7 @@ ifeq ($(PLATFORM),Linux)
 	-L/opt/jdk1.6.0_18/jre/lib/amd64 \
 	-L/opt/jdk1.6.0_18/jre/../lib/amd64 \
 	-L/usr/java/packages/lib/amd64 \
-	-L/usr/lib64 -L/lib64 -L/lib -ljava -ljvm -luuid -pthread \
+	-L/usr/lib64 -L/lib64 -L/lib -ljava -ljvm -luuid -pthread -lrt \
 	$^ $(USER_OBJS) \
 	-o $@
 endif
